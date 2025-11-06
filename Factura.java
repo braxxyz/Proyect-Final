@@ -13,6 +13,9 @@ public Factura (Pasajero pasajero, Vuelo vuelo, String clase, double monto) {
 }
 
 public String GenerarTextoFactura(){
+    StringBuilder sb = new StringBuilder();
+    sb.append("Pasajero").append(pasajero.getNombre()).append("\n");
+    sb
 
 }
 
