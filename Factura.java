@@ -24,10 +24,17 @@ public String GenerarTextoFactura(){
     return sb.toString();
 }
 
-
-
-
-
-
+public double getMonto() {
+    return monto;
+}
+public Vuelo getVuelo() {
+    return vuelo;
+}
+public Pasajero getPasajero() {
+    return pasajero;
+}
+public String getClase() {
+    return clase;
+}
 
 }
