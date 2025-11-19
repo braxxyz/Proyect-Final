@@ -52,12 +52,25 @@ public class VentanaPrincipal extends JFrame {
         add(scroll, BorderLayout.CENTER);
 
         // Acción del botón
-        btnReservar.addActionListener(new ActionListener() {
+        btnReservar.addActionListener(new ActionListener()) {
             
             public void actionPerformed(ActionEvent e) {
                 reservar();
             }
-        });
+         
     }
-    //poner el resto del GUI  aca
+
+};
+               Reservacion reservacion = new Reservacion(pasajero, vuelo, clase);
+
+            // Mostrar resultado
+            txtSalida.setText(reservacion.mostrarReservacion());
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error: " + ex.getMessage(),
+                "Reservación fallida",
+                JOptionPane.ERROR_MESSAGE);
+}
+    
     
