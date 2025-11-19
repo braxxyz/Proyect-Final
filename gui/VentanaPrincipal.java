@@ -59,3 +59,5 @@ public class VentanaPrincipal extends JFrame {
             }
         });
     }
+    //poner el resto del GUI  aca
+    
