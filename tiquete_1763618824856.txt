@@ -1,0 +1,12 @@
+=== Reservación ===
+Pasajero: Brayan
+Vuelo: Costa rica -> nueva zelanda
+Clase: ejecutiva
+Código de tiquete: TIC1
+
+Pasajero: Brayan
+Cedula: 7777777
+Correo: yenamoretty2327@gmail.com
+Vuelo: Costa rica -> nueva zelanda
+Clase: ejecutiva
+Monto: $250.00

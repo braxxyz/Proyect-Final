@@ -1,85 +1,104 @@
 package gui;
 
 import modelo.*;
+
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class VentanaPrincipal extends JFrame {
-    private JTextField txtNombre, txtCedula, txtCorreo;
-    private JComboBox<String> comboClase;
-    private JTextArea txtSalida;
-    private JButton btnReservar;
+    private JTextField txtNombre, txtCedula, txtCorreo, txtClase, txtOrigen, txtDestino;
+    private JTextArea areaResultado;
+    private JTabbedPane pestañas;
 
     public VentanaPrincipal() {
-        setTitle("Sistema de Reservación de Vuelos");
-        setSize(500, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("✈️ Sistema de Reservación de Vuelos");
+        setSize(600, 500);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Panel de entrada
-        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
+        pestañas = new JTabbedPane();
 
-        panel.add(new JLabel("Nombre:"));
-        txtNombre = new JTextField();
-        panel.add(txtNombre);
+        // Panel de formulario
+        JPanel panelFormulario = new JPanel();
+        panelFormulario.setLayout(new BoxLayout(panelFormulario, BoxLayout.Y_AXIS));
+        panelFormulario.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        panel.add(new JLabel("Cédula:"));
-        txtCedula = new JTextField();
-        panel.add(txtCedula);
+        panelFormulario.add(crearCampo("Nombre:", txtNombre = new JTextField()));
+        panelFormulario.add(crearCampo("Cédula:", txtCedula = new JTextField()));
+        panelFormulario.add(crearCampo("Correo:", txtCorreo = new JTextField()));
+        panelFormulario.add(crearCampo("Origen:", txtOrigen = new JTextField()));
+        panelFormulario.add(crearCampo("Destino:", txtDestino = new JTextField()));
+        panelFormulario.add(crearCampo("Clase (ejecutiva/economica):", txtClase = new JTextField()));
 
-        panel.add(new JLabel("Correo:"));
-        txtCorreo = new JTextField();
-        panel.add(txtCorreo);
-
-        panel.add(new JLabel("Clase:"));
-        comboClase = new JComboBox<>(new String[]{"ejecutiva", "economica"});
-        panel.add(comboClase);
-
-        btnReservar = new JButton("Reservar");
-        panel.add(btnReservar);
-
-        // Área de salida
-        txtSalida = new JTextArea();
-        txtSalida.setEditable(false);
-        JScrollPane scroll = new JScrollPane(txtSalida);
-
-        // Layout general
-        add(panel, BorderLayout.NORTH);
-        add(scroll, BorderLayout.CENTER);
-
-        // Acción del botón
+        JButton btnReservar = new JButton("🛫 Reservar");
+        btnReservar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnReservar.setBackground(new Color(0, 120, 215));
+        btnReservar.setForeground(Color.WHITE);
+        btnReservar.setFocusPainted(false);
+        btnReservar.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnReservar.addActionListener(e -> reservar());
+
+        panelFormulario.add(Box.createVerticalStrut(10));
+        panelFormulario.add(btnReservar);
+
+        // Panel de tiquete
+        JPanel panelTiquete = new JPanel(new BorderLayout());
+        areaResultado = new JTextArea();
+        areaResultado.setEditable(false);
+        areaResultado.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        areaResultado.setMargin(new Insets(10, 10, 10, 10));
+        panelTiquete.add(new JScrollPane(areaResultado), BorderLayout.CENTER);
+
+        // Agregar pestañas
+        pestañas.addTab("Formulario", panelFormulario);
+        pestañas.addTab("Tiquete", panelTiquete);
+
+        add(pestañas);
+    }
+
+    private JPanel crearCampo(String etiqueta, JTextField campo) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        JLabel label = new JLabel(etiqueta);
+        label.setPreferredSize(new Dimension(180, 25));
+        panel.add(label, BorderLayout.WEST);
+        panel.add(campo, BorderLayout.CENTER);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        return panel;
     }
 
     private void reservar() {
+        String nombre = txtNombre.getText().trim();
+        String cedula = txtCedula.getText().trim();
+        String correo = txtCorreo.getText().trim();
+        String origen = txtOrigen.getText().trim();
+        String destino = txtDestino.getText().trim();
+        String clase = txtClase.getText().trim().toLowerCase();
+
+        Pasajero pasajero = new Pasajero(nombre, cedula, correo);
+        Avion avion = new Avion("AV001");
+        Vuelo vuelo = new Vuelo("VU001", origen, destino, avion);
+
         try {
-            // Crear pasajero
-            Pasajero pasajero = new Pasajero(
-                txtNombre.getText().trim(),
-                txtCedula.getText().trim(),
-                txtCorreo.getText().trim()
-            );
-
-            // Crear avión con capacidad fija
-            Avion avion = new Avion("AV001");
-
-            // Crear vuelo
-            Vuelo vuelo = new Vuelo("VU001", "San José", "Limón", avion);
-
-            // Obtener clase seleccionada
-            String clase = comboClase.getSelectedItem().toString();
-
-            // Crear reservación
             Reservacion reservacion = new Reservacion(pasajero, vuelo, clase);
-
-            // Mostrar resultado
-            txtSalida.setText(reservacion.mostrarReservacion());
-
+            String texto = reservacion.mostrarReservacion();
+            areaResultado.setText(texto);
+            pestañas.setSelectedIndex(1); // Cambiar a pestaña de tiquete
+            guardarEnArchivo(texto);      // Guardar en archivo
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,
-                "Error: " + ex.getMessage(),
-                "Reservación fallida",
-                JOptionPane.ERROR_MESSAGE);
+            areaResultado.setText("❌ Error: " + ex.getMessage());
+            pestañas.setSelectedIndex(1);
+        }
+    }
+
+    private void guardarEnArchivo(String contenido) {
+        try {
+            String nombreArchivo = "tiquete_" + System.currentTimeMillis() + ".txt";
+            Files.write(Paths.get(nombreArchivo), contenido.getBytes());
+            System.out.println("✅ Tiquete guardado en: " + nombreArchivo);
+        } catch (Exception e) {
+            System.out.println("❌ Error al guardar el archivo: " + e.getMessage());
         }
     }
 }
