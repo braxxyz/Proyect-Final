@@ -1,10 +1,8 @@
 package gui;
- 
+
 import modelo.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VentanaPrincipal extends JFrame {
     private JTextField txtNombre, txtCedula, txtCorreo;
@@ -12,16 +10,15 @@ public class VentanaPrincipal extends JFrame {
     private JTextArea txtSalida;
     private JButton btnReservar;
 
-     public VentanaPrincipal() {
+    public VentanaPrincipal() {
         setTitle("Sistema de Reservación de Vuelos");
         setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-         // Panel principal
-        JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
+        // Panel de entrada
+        JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        // entradas
         panel.add(new JLabel("Nombre:"));
         txtNombre = new JTextField();
         panel.add(txtNombre);
@@ -38,7 +35,6 @@ public class VentanaPrincipal extends JFrame {
         comboClase = new JComboBox<>(new String[]{"ejecutiva", "economica"});
         panel.add(comboClase);
 
-        // Botón
         btnReservar = new JButton("Reservar");
         panel.add(btnReservar);
 
@@ -52,12 +48,39 @@ public class VentanaPrincipal extends JFrame {
         add(scroll, BorderLayout.CENTER);
 
         // Acción del botón
-        btnReservar.addActionListener(new ActionListener() {
-            
-            public void actionPerformed(ActionEvent e) {
-                reservar();
-            }
-        });
+        btnReservar.addActionListener(e -> reservar());
     }
-    //poner el resto del GUI  aca
-     // aca va el resto del gui 
+
+    private void reservar() {
+        try {
+            // Crear pasajero
+            Pasajero pasajero = new Pasajero(
+                txtNombre.getText().trim(),
+                txtCedula.getText().trim(),
+                txtCorreo.getText().trim()
+            );
+
+            // Crear avión con capacidad fija
+            Avion avion = new Avion("AV001");
+
+            // Crear vuelo
+            Vuelo vuelo = new Vuelo("VU001", "San José", "Limón", avion);
+
+            // Obtener clase seleccionada
+            String clase = comboClase.getSelectedItem().toString();
+
+            // Crear reservación
+            Reservacion reservacion = new Reservacion(pasajero, vuelo, clase);
+
+            // Mostrar resultado
+            txtSalida.setText(reservacion.mostrarReservacion());
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error: " + ex.getMessage(),
+                "Reservación fallida",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+

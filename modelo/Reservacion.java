@@ -25,10 +25,14 @@ public class Reservacion {
         return factura;
     }
 
-     public String mostrarReservacion() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(tiquete.getCodigoTiquete()).append("\n");
-        sb.append(tiquete.generarFactura().GenerarTextoFactura()).append("\n");
-        return sb.toString();
-    }  
+    public String mostrarReservacion() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("=== Reservación ===\n");
+    sb.append("Pasajero: ").append(pasajero.getNombre()).append("\n");
+    sb.append("Vuelo: ").append(vuelo.getOrigen()).append(" -> ").append(vuelo.getDestino()).append("\n");
+    sb.append("Clase: ").append(clase).append("\n");
+    sb.append("Código de tiquete: ").append(tiquete.getCodigoTiquete()).append("\n\n");
+    sb.append(factura.GenerarTextoFactura());
+    return sb.toString();
+}
 }

@@ -49,12 +49,12 @@ public class Vuelo {
         }
     }
 
-    public void mostrarInfo() {
-        System.out.println("Código de vuelo: " + codigoVuelo);
-        System.out.println("Origen: " + origen);
-        System.out.println("Destino: " + destino);
-        System.out.println("Disponibilidad Ejecutiva: " + espaciosEjecutivaDisponibles);
-        System.out.println("Disponibilidad Económica: " + espaciosEconomicaDisponibles);
-    }
-    
+   public void mostrarInfo() {
+    System.out.println("Código de vuelo: " + codigoVuelo);
+    System.out.println("Origen: " + origen);
+    System.out.println("Destino: " + destino);
+    System.out.println("Avión asignado: " + avion.getCodigoAvion());
+    System.out.println("Disponibilidad Ejecutiva: " + espaciosEjecutivaDisponibles);
+    System.out.println("Disponibilidad Económica: " + espaciosEconomicaDisponibles);
+}   
 }

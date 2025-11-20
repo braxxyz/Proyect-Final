@@ -6,11 +6,13 @@ public class Avion {
     private int capacidadEconomica = 2;
 
    
-    public Avion(String codigoAvion, int capacidadEjecutiva, int capacidadEconomica) {
-        this.codigoAvion = codigoAvion;
-        this.capacidadEjecutiva = capacidadEjecutiva;
-        this.capacidadEconomica = capacidadEconomica;
-    }
+    public Avion(String codigoAvion) {
+    this.codigoAvion = codigoAvion;
+    this.capacidadEjecutiva = 2;
+    this.capacidadEconomica = 2;
+}
+
+    
 
  
     public String getCodigoAvion() {
